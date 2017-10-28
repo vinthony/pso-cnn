@@ -16,7 +16,7 @@ from pso import Pso
 
 batch_size = 128
 num_classes = 10
-epochs = 100
+epochs = 10
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -70,7 +70,8 @@ def func(x):
             verbose=1,
             validation_data=(x_test, y_test))
   score = model.evaluate(x_test, y_test, verbose=0)
-  return score
+  # loss, val
+  return score[1]
 
 ##################################################################
 pso = Pso(swarmsize=4)

@@ -68,7 +68,6 @@ class Particle(object):
         self.best_position = self.position[:]
 
         self.function_value = [objective_function(self.best_position[-1])]
-
         self.best_function_value = self.function_value[:]
 
     def update_velocity(self, omega, phip, phig, best_swarm_position):
@@ -242,7 +241,6 @@ class Pso(object):
                                       upper_bound,
                                       dimensions,
                                       objective_function))
-
             if particles[-1].best_function_value[-1] < self.best_function_value[-1]:
                 self.best_function_value.append(particles[-1].best_function_value[-1])
                 self.best_position.append(particles[-1].best_position[-1])
