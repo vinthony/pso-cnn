@@ -16,7 +16,7 @@ from pso import Pso
 
 batch_size = 128
 num_classes = 10
-epochs = 10
+epochs = 100
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -50,7 +50,7 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 def func(x):
   n,sf,sp,l = x[0],x[1],x[2],x[3]
-  print('current config:',x)
+ 
   model = Sequential()
   model.add(Conv2D(32,kernel_size=(3, 3),
                  activation='relu',
@@ -63,23 +63,29 @@ def func(x):
   model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adam(),
               metrics=['accuracy'])
+  
+  cp = [keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, verbose=0, mode='auto')];
 
   model.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
-            verbose=1,
-            validation_data=(x_test, y_test))
+            verbose=0,
+            validation_data=(x_test, y_test),callbacks=cp)
+  
   score = model.evaluate(x_test, y_test, verbose=0)
+
   # loss, val
+  print('current config:',x,'val:',score[1])
   return score[1]
 
 ##################################################################
-pso = Pso(swarmsize=4)
+pso = Pso(swarmsize=4,maxiter=14)
 # n,sf,sp,l
 bp,value = pso.run(func,[1,2,2,2],[16,8,4,4])
 
+v = func(bp);
 
 ##################################################################
 
 print('Test loss:', bp)
-print('Test accuracy:', value)
+print('Test accuracy:', value,v)
